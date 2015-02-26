@@ -1,0 +1,36 @@
+<keymap version="1" name="Default copy" parent="$default">
+  <action id="$Redo">
+    <keyboard-shortcut first-keystroke="shift control Z" />
+    <keyboard-shortcut first-keystroke="shift alt BACK_SPACE" />
+    <keyboard-shortcut first-keystroke="control Y" />
+  </action>
+  <action id="Annotate">
+    <keyboard-shortcut first-keystroke="control alt A" />
+  </action>
+  <action id="ChangesView.AddUnversioned" />
+  <action id="Console.TableResult.DeleteRows" />
+  <action id="Diagram.DeselectAll" />
+  <action id="Editor Redo">
+    <keyboard-shortcut first-keystroke="control Y" />
+  </action>
+  <action id="EditorDeleteLine">
+    <keyboard-shortcut first-keystroke="shift control D" />
+  </action>
+  <action id="Git.Add" />
+  <action id="SwitchApply">
+    <keyboard-shortcut first-keystroke="shift alt ENTER" />
+  </action>
+  <action id="SwitchDown">
+    <keyboard-shortcut first-keystroke="shift alt DOWN" />
+  </action>
+  <action id="SwitchLeft">
+    <keyboard-shortcut first-keystroke="shift alt LEFT" />
+  </action>
+  <action id="SwitchRight">
+    <keyboard-shortcut first-keystroke="shift alt RIGHT" />
+  </action>
+  <action id="SwitchUp">
+    <keyboard-shortcut first-keystroke="shift alt UP" />
+  </action>
+  <action id="Uml.ShowDiff" />
+</keymap>
