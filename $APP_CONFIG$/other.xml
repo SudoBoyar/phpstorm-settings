@@ -22,6 +22,13 @@
     <ignored-resource url="http://exslt.org/sets" />
     <ignored-resource url="http://www.w3.org/2000/svg" />
   </component>
+  <component name="FileEditorProviderManager">
+    <option name="selectedProviders">
+      <map>
+        <entry key="text-editor,com.intellij.database.editor.CsvTableFileEditorProvider" value="com.intellij.database.editor.CsvTableFileEditorProvider" />
+      </map>
+    </option>
+  </component>
   <component name="PhpRefactoringSettings">
     <option name="RENAME_SEARCH_IN_COMMENTS_FOR_CLASS" value="true" />
     <option name="RENAME_SEARCH_NON_CODE_FOR_CLASS" value="true" />
@@ -91,6 +98,9 @@
       <option name="ERROR_STRIPE_COLOR" value="a74c0" />
       <option name="EFFECT_TYPE" value="0" />
     </pattern>
+  </component>
+  <component name="VcsApplicationSettings" PATCH_STORAGE_LOCATION="Z:\zipline">
+    <option name="PATCH_STORAGE_LOCATION" value="Z:\zipline" />
   </component>
   <component name="XDebuggerSettings">
     <data-views />
