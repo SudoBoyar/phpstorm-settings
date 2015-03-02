@@ -1,0 +1,469 @@
+Index: app/Plugin/Campaigns/Controller/Component/CampaignsComponent.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/Plugin/Campaigns/Controller/Component/CampaignsComponent.php	(date 1424715360000)
++++ app/Plugin/Campaigns/Controller/Component/CampaignsComponent.php	(revision )
+@@ -1,40 +1,50 @@
+ <?php
+ App::uses('Component', 'Controller');
+ 
+-class CampaignsComponent extends Component {
++class CampaignsComponent extends Component
++{
+-	
++
+ 	public $components = array('TradeDesk');
+-	
++
++	/** @var \Campaign $Campaign */
++	protected $Campaign;
+-	
++
+ 	/**
+ 	 * This method takes a reference to the controller which is loading it.
+ 	 * Perform controller initialization here.
+ 	 */
+-	public function initialize(Controller $controller) {
+-		// empty
++	public function initialize(Controller $controller)
++	{
++		parent::initialize($controller);
++
++		App::uses('Campaign', 'Model');
++		$this->Campaign = $campaign = ClassRegistry::init('Campaign');
+ 	}
+ 
+ 	/**
+ 	 * Gets all campaign payments over a given timespan that would affect an account's funds.
+ 	 */
+-	public function getCampaignFundPayments($account_id, $start_time, $end_time=null) {
++	public function getCampaignFundPayments($account_id, $start_time, $end_time = null)
++	{
+ 		$this->Payments = ClassRegistry::init('Payments');
+-		
++
+ 		$conditions_array = array(
+-			'Payments.account_id'		=> $account_id,
++			'Payments.account_id'      => $account_id,
+-			'Payments.payment_type_id'	=> array(1, 5),
++			'Payments.payment_type_id' => array(1, 5),
+-		//	'Payments.value <'			=> 0,
+-			'Payments.added_date >='		=> date('Y-m-d H:i:s', $start_time)
++			'Payments.added_date >='   => date('Y-m-d H:i:s', $start_time)
+ 		);
+ 		if ($end_time > $start_time) {
+ 			$conditions_array['Payments.added_date <='] = date('Y-m-d H:i:s', $end_time);
+ 		}
+-		
++
+-		$results = $this->Payments->find('all', array(
++		$results = $this->Payments->find(
++			'all',
++			array(
+-				'conditions'	=> $conditions_array,
++				'conditions' => $conditions_array,
+-				'recursive'		=> -1
++				'recursive'  => -1
+-			));
++			)
++		);
+-		
++
+ 		$payments = array();
+ 		if (!empty($results)) {
+ 			foreach ($results as $payment) {
+@@ -43,23 +53,61 @@
+ 		}
+ 		return $payments;
+ 	}
+-	
++
+ 	/**
+ 	 * Get the number of active campaigns during the given timespan.
+ 	 * An "active campaign" is defined as one that had positive spend.
+ 	 */
+-	public function get_active_campaigns_count($start_date, $end_date) {
++	public function get_active_campaigns_count($start_date, $end_date)
++	{
+ 		$this->RtbImpressionsReport = ClassRegistry::init('RtbImpressionsReport');
+-		
++
+-		$active_campaigns_count = $this->RtbImpressionsReport->find('count', array(
++		$active_campaigns_count = $this->RtbImpressionsReport->find(
++			'count',
++			array(
+ 				'conditions' => array(
+-					'date >= '	=> $start_date,
++					'date >= ' => $start_date,
+-					'date <= '	=> $end_date
++					'date <= ' => $end_date
+ 				),
+-				'group'			=> array('`campaign_id` HAVING SUM(`advertiser_cost`) > 0'),
++				'group'      => array('`campaign_id` HAVING SUM(`advertiser_cost`) > 0'),
+-				'recursive'		=> -1
++				'recursive'  => -1
+-			));
++			)
++		);
+-		
++
+ 		return intval($active_campaigns_count);
++	}
++
++	public function getActiveCampaigns($account)
++	{
++		return $this->Campaign->find(
++			'all',
++			array(
++				'conditions' => array(
++					'Campaign.start_date <= ' => date('Y-m-d'), // Campaigns that have already started
++					'OR'                      => array(
++						array('Campaign.end_date >= ' => date('Y-m-d')), // Campaigns that haven't ended yet
++						array('Campaign.end_date' => '1969-12-31 00:00:00'), // Campaigns with no end date
++						array('Campaign.end_date' => '1970-01-01 00:00:00'), // Campaigns with no end date
++						array('Campaign.end_date IS NULL') // Campaigns that haven't ended yet
++					),
++					'Campaign.isEnabled'      => 1, // Active campaigns
++					'Campaign.archived'       => 'N',
++					'Campaign.account_id'     => $account['Account']['id'],
++					'Channels.status'         => 'E',
++				),
++				'fields'     => array('Campaign.*'),
++				'group'      => '`Campaign`.`id`',
++				'joins'      => array(
++					array(
++						'table'      => 'channels',
++						'type'       => 'LEFT',
++						'alias'      => 'Channels',
++						'conditions' => array(
++							'Campaign.id = Channels.campaign_id'
++						)
++					)
++				)
++			)
++		);
+ 	}
+ }
+Index: app/Console/Command/OneTimeScriptsShell.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/Console/Command/OneTimeScriptsShell.php	(date 1424715360000)
++++ app/Console/Command/OneTimeScriptsShell.php	(revision )
+@@ -487,7 +487,310 @@
+ 		
+ 		echo 'complete' . "\n";
+ 	}
+-	
++
++	public function accountBalanceCsv()
++	{
++		App::import('Model', 'Account');
++		App::import('Model', 'Campaign');
++		App::import('Model', 'Payment');
++		App::import('Model', 'RtbImpressionsReport');
+-	
++
++		$accountModel             = new Account();
++		//$campaignModel            = new Campaign();
++		$paymentModel             = new Payment();
++		$rtbImpressionReportModel = new RtbImpressionsReport();
+-	
++
++		$accounts = $accountModel->find(
++			'all',
++			array(
++				'recursive' => -1,
++				//'limit' => 2,
++			)
++		);
++
++		$incorrect    = array(
++			array(
++				'Issue',
++				'Id',
++				'Account',
++				'State',
++				'Balance',
++				'Total',
++				'Expected Balance',
++				'Balance Difference',
++				'Cost Difference',
++				'Cost',
++				'Debit',
++				'Credit',
++				'Adjustments',
++				'Dec 11-20 Cost Difference',
++				'Dec 11-20 Cost',
++				'Dec 11-20 Debit',
++				'Dec 11-20 Credit',
++			),
++		);
++
++		$dec11 = new DateTime('2014-12-11 00:00:00');
++		$dec21 = new DateTime('2014-12-21 00:00:00');
++		$jan1  = new DateTime('2015-01-01 00:00:00');
++
++		$totalMissing = 0.0;
++		$totalExtra   = 0.0;
++		$decMissing   = 0.0;
++		$decExtra     = 0.0;
++		foreach ($accounts as $account) {
++			$accountId = $account['Account']['id'];
++			if ($accountId == 1 || $accountId == 85) {
++				continue;
++			}
++			//if ($account['Account']['account_state'] == 'C') {
++			//	continue;
++			//}
++			$accountName = $account['Account']['company_name'];
++			$balance     = $account['Account']['campaign_fund'];
++			$state       = $account['Account']['account_state'];
++			$accountData = array(
++				'info' => array(
++					'balance' => $balance,
++				),
++			);
++
++			//$campaigns = $campaignModel->find(
++			//	'all',
++			//	array(
++			//		'conditions' => array(
++			//			'Campaign.account_id' => $accountId,
++			//		),
++			//		'recursive'  => -1,
++			//	)
++			//);
++
++			$totals      = array(
++				'budget'     => 0.0,
++				'cost'       => 0.0,
++				'credit'     => 0.0,
++				'debit'      => 0.0,
++				//'payments'   => 0.0,
++				'adjustment' => 0.0,
++			);
++			$data        = array();
++			//$campaignIds = array();
++			// for unassociated payments
++			$data[0] = array(
++				'budget'     => 0.0,
++				'cost'       => 0.0,
++				'credit'     => 0.0,
++				'debit'      => 0.0,
++				//'payments'   => 0.0,
++				'adjustment' => 0.0,
++			);
++			//$data2014 = array(
++			//	'budget'     => 0.0,
++			//	'cost'       => '0.0',
++			//	'credit'     => 0.0,
++			//	'debit'      => 0.0,
++			//	//'payments'   => 0.0,
++			//	'adjustment' => 0.0,
++			//);
++			$dateData = array(
++				'budget'     => 0.0,
++				'cost'       => '0.0',
++				'credit'     => 0.0,
++				'debit'      => 0.0,
++				//'payments'   => 0.0,
++				'adjustment' => 0.0,
++			);
++
++			//foreach ($campaigns as $campaign) {
++			//	$campaignId = $campaign['Campaign']['id'];
++			//	$budget     = $campaign['Campaign']['budget'];
++			//
++			//	$campaignIds[] = $campaignId;
++			//
++			//	//$data[$campaignId] = array(
++			//	//	'budget'     => $budget,
++			//	//	'cost'       => '0.0',
++			//	//	'credit'     => 0.0,
++			//	//	'debit'      => 0.0,
++			//	//	//'payments'   => 0.0,
++			//	//	'adjustment' => 0.0,
++			//	//);
++			//	$totals['budget'] += $budget;
++			//}
++			//unset($campaigns);
++
++			$rtbImpressionReports = $rtbImpressionReportModel->find(
++				'all',
++				array(
++					'conditions' => array(
++						'RtbImpressionsReport.account_id' => $accountId,
++					),
++					'recursive'  => -1,
++				)
++			);
++			foreach ($rtbImpressionReports as $rtbImpressionReport) {
++				$date = new \DateTime($rtbImpressionReport['RtbImpressionsReport']['date']);
++				//if ($date >= $jan1) {
++				//	continue;
++				//}
++				// make sure it was uploaded the day after
++				$uploaded = new \DateTime($rtbImpressionReport['RtbImpressionsReport']['date_uploaded']);
++				$diff     = $uploaded->diff($date);
++				if ($diff->days < 1) {
++					continue;
++				}
++
++				$cost           = $rtbImpressionReport['RtbImpressionsReport']['advertiser_cost'];
++				$totals['cost'] = bcadd($cost, $totals['cost'], 10);
++				if ($date >= $dec11 && $date < $dec21) {
++					$dateData['cost'] = bcadd($cost, $dateData['cost']);
++				}
++			}
++			unset($rtbImpressionReports);
++
++			$payments = $paymentModel->find(
++				'all',
++				array(
++					'conditions' => array(
++						'account_id'      => $accountId,
++						'payment_type_id' => array(1, 5),
++					),
++					'recursive'  => -1,
++				)
++			);
++			foreach ($payments as $payment) {
++				$amount     = $payment['Payment']['value'];
++				//$campaignId = $payment['Payment']['campaign_id'];
++				//$campaignId = is_null($campaignId) ? 0 : $campaignId;
++				$date       = new DateTime($payment['Payment']['added_date']);
++				//if ($date >= $jan1) {
++				//	continue;
++				//}
++
++				switch ($payment['Payment']['payment_type_id']) {
++					case 1:
++						if ($amount > 0) {
++							//$data[$campaignId]['credit'] += $amount;
++							$totals['credit'] += $amount;
++							if ($date >= $dec11 && $date < $dec21) {
++								$dateData['credit'] += $amount;
++							}
++						} else {
++							//$data[$campaignId]['debit'] += $amount;
++							$totals['debit'] += $amount;
++							if ($date >= $dec11 && $date < $dec21) {
++								$dateData['debit'] += $amount;
++							}
++						}
++						//$data[$campaignId]['payments'] += $amount;
++						//$totals['payments'] += $amount;
++						break;
++					case 5:
++						//$data[$campaignId]['adjustment'] += $amount;
++						$totals['adjustment'] += $amount;
++						if ($date >= $dec11 && $date < $dec21) {
++							$dateData['adjustment'] += $amount;
++						}
++						break;
++					default:
++						echo "Something isn't right...";
++						break;
++				}
++			}
++
++			$accountData['data']   = $data;
++			$accountData['totals'] = $totals;
++
++			$credit          = round(floatval($totals['credit']), 2);
++			$decCredit       = round(floatval($dateData['credit']), 2);
++			$debit           = round(abs(floatval($totals['debit'])), 2);
++			$decDebit        = round(abs(floatval($dateData['debit'])), 2);
++			$adjustments     = round(floatval($totals['adjustment']), 2);
++			$cost            = round(floatval($totals['cost']), 2);
++			$decCost         = round(floatval($dateData['cost']), 2);
++
++			$total              = $credit - $debit + $adjustments;
++			$expectedBalance    = $credit - $cost + $adjustments;
++
++			$costDiff    = $cost - $debit;
++			$balanceDiff = $balance - $expectedBalance;
++			$decCostDiff = $decCost - $decDebit;
++
++			$issues = array();
++			if ($cost > $debit) {
++				$issues[] = 'Missing Charges';
++				$totalMissing += $costDiff;
++			} elseif ($cost < $debit) {
++				$issues[] = 'Extra Charges';
++				$totalExtra += abs($costDiff);
++			}
++
++			if ($decCost > $decDebit) {
++				$decMissing += $costDiff;
++			} elseif ($decCost < $decDebit) {
++				$decExtra += abs($costDiff);
++			}
++
++			$balance            = number_format($balance, 2);
++			$total              = number_format($total, 2);
++			$cost               = number_format($cost, 2);
++			$credit             = number_format($credit, 2);
++			$debit              = number_format($debit, 2);
++			$expectedBalance    = number_format($expectedBalance, 2);
++			$decCost            = number_format($decCost, 2);
++			$decCredit          = number_format($decCredit, 2);
++			$decDebit           = number_format($decDebit, 2);
++
++			if ($total !== $balance) {
++				$issues[] = 'Incorrect Balance';
++			}
++
++			$issue = implode(' & ', $issues);
++			if (!empty($issue)) {
++				$incorrect[] = array(
++					$issue,
++					$accountId,
++					$accountName,
++					$state,
++					$balance,
++					$total,
++					$expectedBalance,
++					$balanceDiff,
++					$costDiff,
++					$cost,
++					$debit,
++					$credit,
++					$adjustments,
++					$decCostDiff,
++					$decCost,
++					$decDebit,
++					$decCredit,
++				);
++			}
++		}
++
++		echo "Total Missing: {$totalMissing}\n";
++		echo "Total Extra: {$totalExtra}\n";
++		echo "December Missing: {$decMissing}\n";
++		echo "December Extra: {$decExtra}";
++
++		$now    = new DateTime();
++		$handle = fopen(TMP . 'CampaignFunds-' . $now->format('Y_m_d-H_i_s') . '.csv', 'w');
++		foreach ($incorrect as $row) {
++			fputcsv($handle, $row);
++		}
++		fclose($handle);
++	}
++
++	public function populateCampaignSpends() {
++		App::import('Model', 'AccountCampaignFund');
++		App::import('Model', 'AccountCampaignFundType');
++		App::import('Model', 'Campaign');
++		App::import('Model', 'CampaignSpend');
++		App::import('Model', 'Payment');
++		App::import('Model', 'RtbImpressionsReport');
++
++		$accountCampaignFundModel = new AccountCampaignFund();
++
++	}
+ }
