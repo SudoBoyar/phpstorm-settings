@@ -11,15 +11,15 @@
     <option name="CURRENT_SCHEME_NAME" value="Default" />
   </component>
   <component name="ExternalResourceManagerImpl">
-    <ignored-resource url="http://relaxng.org/ns/compatibility/annotations/1.0" />
     <ignored-resource url="urn:idea:xslt-plugin#extensions" />
-    <ignored-resource url="http://www.w3.org/1998/Math/MathML" />
+    <ignored-resource url="http://relaxng.org/ns/compatibility/annotations/1.0" />
     <ignored-resource url="http://exslt.org/dates-and-times" />
+    <ignored-resource url="http://www.w3.org/1998/Math/MathML" />
     <ignored-resource url="http://exslt.org/math" />
     <ignored-resource url="http://exslt.org/dynamic" />
     <ignored-resource url="http://exslt.org/common" />
-    <ignored-resource url="http://exslt.org/sets" />
     <ignored-resource url="http://exslt.org/strings" />
+    <ignored-resource url="http://exslt.org/sets" />
     <ignored-resource url="http://www.w3.org/2000/svg" />
   </component>
   <component name="PhpRefactoringSettings">
@@ -31,6 +31,7 @@
   <component name="RecentDirectoryProjectsManager">
     <option name="recentPaths">
       <list>
+        <option value="D:\xampp\htdocs\choozle\zipline" />
         <option value="Z:\zipline" />
         <option value="C:\xampp\htdocs\choozle\zipline" />
         <option value="Z:\zf2" />
@@ -48,7 +49,7 @@
         <option value="Z:\zipline" />
       </list>
     </option>
-    <option name="lastPath" value="Z:\zipline" />
+    <option name="lastPath" value="D:\xampp\htdocs\choozle\zipline" />
   </component>
   <component name="RecentTaskRepositories">
     <Trello shared="false">
@@ -120,9 +121,7 @@
     <recent_templates>
       <option name="RECENT_TEMPLATES">
         <value>
-          <list size="1">
-            <item index="0" class="java.lang.String" itemvalue="UML Class" />
-          </list>
+          <list size="0" />
         </value>
       </option>
     </recent_templates>
