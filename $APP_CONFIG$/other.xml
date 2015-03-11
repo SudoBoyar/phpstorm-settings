@@ -101,6 +101,10 @@
       <option name="EFFECT_TYPE" value="0" />
     </pattern>
   </component>
+  <component name="UsageViewSettings">
+    <option name="expanded" value="true" />
+    <option name="IS_EXPANDED" value="true" />
+  </component>
   <component name="VcsApplicationSettings" PATCH_STORAGE_LOCATION="Z:\zipline\.idea\shelf">
     <option name="PATCH_STORAGE_LOCATION" value="Z:\zipline\.idea\shelf" />
   </component>
