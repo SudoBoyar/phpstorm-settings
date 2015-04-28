@@ -1,0 +1,16 @@
+Index: app/Console/Command/CampaignsShell.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/Console/Command/CampaignsShell.php	(revision 6de775437860be6ef5bc85c2a7de66a8fed6a4b4)
++++ app/Console/Command/CampaignsShell.php	(revision )
+@@ -750,7 +750,7 @@
+ 				'conditions' => array(
+ 					'Channel.status' => array(
+ 						\Choozle\Campaign\ChannelStatus::OVER_DAILY_BUDGET,
+-						\Choozle\Campaign\ChannelStatus::CAMPAIGN_OVER_DAILY_BUDGET
++						\Choozle\Campaign\ChannelStatus::CAMPAIGN_OVER_DAILY_BUDGET,
+ 					),
+ 				),
+ 				'recursive'  => -1,
