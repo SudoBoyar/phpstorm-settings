@@ -1,0 +1,59 @@
+Index: app/Lib/Choozle/Campaign/Campaign.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/Lib/Choozle/Campaign/Campaign.php	(date 1430345996000)
++++ app/Lib/Choozle/Campaign/Campaign.php	(revision )
+@@ -117,17 +117,17 @@
+ 
+ 	/**
+ 	 * @param \DateTime $date
+-	 * @return float
++	 * @return string
+ 	 */
+ 	public function getDailySpend(\DateTime $date)
+ 	{
+-		$spend = 0.0;
++		$spend = '0.0';
+ 		foreach ($this->getRtbReports($date) as $report) {
+-			$spend += $report['RtbImpressionsReport']['advertiser_cost'];
++			$spend = bcadd($spend, $report['RtbImpressionsReport']['advertiser_cost']);
+ 		}
+ 
+ 		foreach ($this->getDataCpmReports($date) as $cpmReport) {
+-			$spend += $cpmReport['DataCpmReport']['data_cost'];
++			$spend = bcadd($spend, $cpmReport['DataCpmReport']['data_cost']);
+ 		}
+ 		return $spend;
+ 	}
+@@ -271,6 +271,20 @@
+ 	}
+ 
+ 	/**
++	 * Check if the campaign is over
++	 *
++	 * @return bool
++	 */
++	public function isComplete()
++	{
++		if (null === $this->getEnd()) {
++			return false;
++		}
++
++		return $this->getEnd() < new \DateTime();
++	}
++
++	/**
+ 	 * @return string
+ 	 */
+ 	public function getTdId()
+@@ -312,7 +326,7 @@
+ 	}
+ 
+ 	/**
+-	 * @return object|\RtbImpressionsReport
++	 * @return \RtbImpressionsReport
+ 	 */
+ 	private function getRtbReportModel()
+ 	{

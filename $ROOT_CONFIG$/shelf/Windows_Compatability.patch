@@ -1,0 +1,30 @@
+Index: app/Plugin/AssetCompress/Lib/AssetScanner.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/Plugin/AssetCompress/Lib/AssetScanner.php	(revision c3d6c0de158da36c543a44866f5cfcb26e0d06a5)
++++ app/Plugin/AssetCompress/Lib/AssetScanner.php	(revision )
+@@ -144,11 +144,20 @@
+  * @return string resolved path
+  */
+ 	public function resolve($path, $full = true) {
++		$temp = false;
+ 		if (preg_match(self::PLUGIN_PATTERN, $path)) {
+-			return $this->_resolvePlugin($path, $full);
++			$temp = $this->_resolvePlugin($path, $full);
+ 		}
+ 		if ($this->_theme && preg_match(self::THEME_PATTERN, $path)) {
+-			return $this->_resolveTheme($path, $full);
++			$temp = $this->_resolveTheme($path, $full);
++		}
++
++		if ($temp) {
++			if ($full) {
++				return $this->_normalizePath($temp, DS);
++			} else {
++				return $this->_normalizePath($temp, '/');
++			}
+ 		}
+ 		return $path;
+ 	}

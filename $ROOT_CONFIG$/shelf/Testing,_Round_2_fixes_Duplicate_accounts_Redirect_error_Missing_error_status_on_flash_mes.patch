@@ -1,0 +1,358 @@
+Index: app/Controller/AppController.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/Controller/AppController.php	(revision b4bfe76cd58ffad5cdc34893793633da7b20effc)
++++ app/Controller/AppController.php	(revision )
+@@ -153,7 +153,7 @@
+ 					'Account.id',
+ 					'Account.company_name',
+ 					'Account.account_state',
+-					'Subscription.subscription_type'
++					'Subscription.subscription_type',
+ 				),
+ 				'joins'      => array(
+ 					array(
+@@ -161,21 +161,21 @@
+ 						'type'       => 'INNER',
+ 						'alias'      => 'Subscription',
+ 						'conditions' => array(
+-							'Subscription.id = Account.subscription_id'
+-						)
++							'Subscription.id = Account.subscription_id',
+-					),
++						),
++					),
+ 					array(
+ 						'table'      => 'accounts_users',
+ 						'type'       => 'INNER',
+ 						'alias'      => 'AccountsUser',
+ 						'conditions' => array(
+ 							'AccountsUser.account_id = Account.id',
+-							//'AccountsUser.account_permission_id = 2' // Creator
+-						)
+-					)
+-				),
++						),
++					),
++				),
+ 				'order'      => array('Account.company_name ASC'),
+-				'recursive'  => -1
++				'group'      => array('Account.id'),
++				'recursive'  => -1,
+ 			)
+ 		);
+ 
+Index: app/Controller/Component/AccountComponent.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/Controller/Component/AccountComponent.php	(revision b4bfe76cd58ffad5cdc34893793633da7b20effc)
++++ app/Controller/Component/AccountComponent.php	(revision )
+@@ -276,79 +276,86 @@
+ 
+ 	public function accountRedirects()
+ 	{
+-		if (isset($_GET['redirect']) && $_GET['redirect'] == 'creatives') {
++		$accountId = $this->Controller->current_account['Account']['id'];
++		$permissionId = null;
++		foreach ($this->Controller->current_user['UserAccounts'] as $ua) {
++			if ($ua['account_id'] == $accountId) {
++				$permissionId = $ua['account_permission_id'];
++				break;
++			}
++		}
++		if (!isset($_GET['redirect'])) {
++			return;
++		}
++
++		switch ($_GET['redirect']) {
++			case 'creatives':
+-			$this->Controller->redirect(
+-				array(
+-					'plugin'     => 'libraries',
+-					'controller' => 'creative',
+-					'action'     => 'video_ad'
+-				)
+-			);
+-			return;
++				$this->Controller->redirect(
++					array(
++						'plugin'     => 'libraries',
++						'controller' => 'creative',
++						'action'     => 'video_ad'
++					)
++				);
++				return;
+-		}
+-		if (isset($_GET['redirect']) && $_GET['redirect'] == 'insights') {
++			case 'insights':
+-			$this->Controller->redirect(
+-				array(
+-					'plugin'     => 'choozle_insights',
+-					'controller' => 'choozle_insights'
+-				)
+-			);
+-			return;
++				$this->Controller->redirect(
++					array(
++						'plugin'     => 'choozle_insights',
++						'controller' => 'choozle_insights'
++					)
++				);
++				return;
+-		}
+-		if (isset($_GET['redirect']) && $_GET['redirect'] == 'audiences') {
++			case 'audiences':
+-			$this->Controller->redirect(
+-				array(
+-					'plugin'     => 'choozle_insights',
+-					'controller' => 'audience'
+-				)
+-			);
+-			return;
++				$this->Controller->redirect(
++					array(
++						'plugin'     => 'choozle_insights',
++						'controller' => 'audience'
++					)
++				);
++				return;
+-		}
+-		if (isset($_GET['redirect']) && $_GET['redirect'] == 'campaigns') {
++			case 'campaigns':
+-			$this->Controller->redirect(
+-				array(
+-					'plugin'     => 'campaigns',
+-					'controller' => 'campaigns'
+-				)
+-			);
+-			return;
++				$this->Controller->redirect(
++					array(
++						'plugin'     => 'campaigns',
++						'controller' => 'campaigns'
++					)
++				);
++				return;
+-		}
+-		if (isset($_GET['redirect']) && $_GET['redirect'] == 'add') {
++			case 'add':
++				if ($permissionId != AccountPermission::VIEWER) {
+-			$this->Controller->redirect(
+-				array(
+-					'plugin'     => 'accounts',
+-					'controller' => 'accounts',
+-					'action'     => 'add'
+-				)
+-			);
++					$this->Controller->redirect(
++						array(
++							'plugin'     => 'accounts',
++							'controller' => 'accounts',
++							'action'     => 'add'
++						)
++					);
+-			return;
+-		}
++				}
+-		if (isset($_GET['redirect']) && $_GET['redirect'] == 'sites') {
++				return;
++			case 'sites':
+-			$this->Controller->redirect(
+-				array(
+-					'plugin'     => 'choozle_insights',
+-					'controller' => 'audience',
+-					'action'     => 'manage'
+-				)
+-			);
+-			return;
++				$this->Controller->redirect(
++					array(
++						'plugin'     => 'choozle_insights',
++						'controller' => 'audience',
++						'action'     => 'manage'
++					)
++				);
++				return;
+-		}
+-		if (isset($_GET['redirect']) && $_GET['redirect'] == 'download_reports') {
++			case 'download_reports':
++				// @TODO: The download reports method is all but dead, this should be removed soon
+-			$this->Controller->redirect(
+-				array(
+-					'plugin'     => 'accounts',
+-					'controller' => 'accounts',
+-					'action'     => 'download_reports'
+-				)
+-			);
+-			return;
++				$this->Controller->redirect(
++					array(
++						'plugin'     => 'accounts',
++						'controller' => 'accounts',
++						'action'     => 'download_reports'
++					)
++				);
++				return;
+-		}
+-
+-		if (isset($_GET['redirect'])) {
++			default:
+-			$this->Controller->redirect(Router::url('/', true) . $_GET['redirect']);
+-			return;
++				$this->Controller->redirect(Router::url('/', true) . $_GET['redirect']);
++				return;
+ 		}
+-
+ 	}
+ 
+ 	/**
+Index: app/Plugin/Accounts/Controller/AccountsController.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/Plugin/Accounts/Controller/AccountsController.php	(revision b4bfe76cd58ffad5cdc34893793633da7b20effc)
++++ app/Plugin/Accounts/Controller/AccountsController.php	(revision )
+@@ -178,7 +178,7 @@
+ 				$account_pages[] = 'add';
+ 				// make sure user has permissions
+ 				if (in_array($this->request->params['action'], $account_pages) && !$this->isAdmin) {
+-					$this->Session->setFlash('You do not have permissions to view this page.');
++					$this->Session->setFlash('You do not have permissions to view this page.', 'flash_alert');
+ 					$this->redirect(array('action' => 'view', $this->Account->id));
+ 					return;
+ 				}
+@@ -264,11 +264,7 @@
+ 			$_GET['direction'] = 'asc';
+ 		}
+ 
+-		$conditions = ($this->is_super_admin
+-			? array()
+-			: array(
+-				'AccountsUser.user_id' => $this->Auth->user('id')
+-			));
++		$conditions = $this->is_super_admin ? array() : array('AccountsUser.user_id' => $this->Auth->user('id'));
+ 
+ 		if (!empty($_GET['filter'])) {
+ 			$filter = $_GET['filter'];
+@@ -280,7 +276,7 @@
+ 					'Account.address_1 LIKE'    => '%' . $filter . '%',
+ 					'Account.city LIKE'         => '%' . $filter . '%',
+ 					'User.first_name LIKE'      => '%' . $filter . '%',
+-					'User.last_name LIKE'       => '%' . $filter . '%'
++					'User.last_name LIKE'       => '%' . $filter . '%',
+ 				)
+ 			);
+ 
+@@ -290,8 +286,8 @@
+ 				$conditions = array(
+ 					'AND' => array(
+ 						$filter_array,
+-						$conditions
+-					)
++						$conditions,
++					),
+ 				);
+ 			}
+ 		}
+@@ -300,7 +296,7 @@
+ 			'Account' => array(
+ 				'conditions' => array(
+ 					$conditions,
+-					'Account.account_state <> \'C\''
++					'Account.account_state <>' => Account::CANCELLED,
+ 				),
+ 				'joins'      => array(
+ 					array(
+@@ -309,24 +305,26 @@
+ 						'alias'      => 'AccountsUser',
+ 						'conditions' => array(
+ 							'AccountsUser.account_id = Account.id',
+-						)
+-					),
++						),
++					),
+ 					array(
+ 						'table'      => 'users',
+ 						'type'       => 'INNER',
+ 						'alias'      => 'User',
+ 						'conditions' => array(
+-							'User.id = AccountsUser.user_id'
+-						)
+-					)
++							'User.id = AccountsUser.user_id',
+-				),
++						),
++					),
++				),
+ 				'limit'      => 10,
+ 				'order'      => array('company_name' => 'asc'),
+-				'paramType'  => 'querystring'
+-			)
++				'group'      => array('Account.id'),
++				'paramType'  => 'querystring',
++			),
+ 		);
++
+-		$accounts                  = $this->Paginator->paginate('Account');
++		$accounts           = $this->Paginator->paginate('Account');
+-		$accounts_formatted        = array();
++		$accounts_formatted = array();
+ 
+ 		foreach ($accounts as $account) {
+ 			$accounts_formatted[] = array(
+@@ -349,9 +347,9 @@
+ 			'first',
+ 			array(
+ 				'conditions' => array(
+-					'id' => 1
++					'id' => 1,
++				),
+-				)
++			)
+-			)
+ 		);
+ 		$this->set('release_notes', $release_notes);
+ 		$notes_seen = $this->CMSPage->CMSPagesUsers->find(
+@@ -360,9 +358,9 @@
+ 				'conditions' => array(
+ 					'user_id'       => $this->Auth->user('id'),
+ 					'c_m_s_page_id' => 1,
+-					'stamp'         => $release_notes['CMSPage']['modified']
++					'stamp'         => $release_notes['CMSPage']['modified'],
++				),
+-				)
++			)
+-			)
+ 		);
+ 		$this->set('notes_seen', $notes_seen);
+ 
+@@ -381,9 +379,9 @@
+ 			'first',
+ 			array(
+ 				'conditions' => array(
+-					'id' => 3 // Terms of Service
++					'id' => 3, // Terms of Service
++				),
+-				)
++			)
+-			)
+ 		);
+ 
+ 		$this->set('terms', $terms);
+@@ -400,9 +398,9 @@
+ 				'list',
+ 				array(
+ 					'conditions' => array(
+-						'parent_id IS NULL'
++						'parent_id IS NULL',
+ 					),
+-					'order'      => 'name'
++					'order'      => 'name',
+ 				)
+ 			)
+ 		);
