@@ -1,0 +1,131 @@
+Index: app/Controller/AppController.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/Controller/AppController.php	(revision bb0838bba2e9163e9d0dcdfe843dea323ac224be)
++++ app/Controller/AppController.php	(revision )
+@@ -482,10 +482,10 @@
+ 		if (isset($data['attachments']) && is_array($data['attachments'])) {
+ 			$Email->attachments($data['attachments']);
+ 		}
+-		if (!empty($data['bcc'])) {
+-			$bcc = explode(',', $data['bcc']);
+-			$Email->bcc($bcc);
+-		}
++		//if (!empty($data['bcc'])) {
++		//	$bcc = explode(',', $data['bcc']);
++		//	$Email->bcc($bcc);
++		//}
+ 		if (
+ 			$this->user_branding && 
+ 			!empty($this->user_branding['UsersBranding']['support_contact'])
+@@ -496,11 +496,12 @@
+ 		} else {
+ 			$Email->from(SUPPORT_EMAIL_ADDRESS, 'Choozle');
+ 		}
+-		if (is_array($data['email'])) {
+-			$Email->to($data['email']);
+-		} else {
+-			$Email->to($data['email'], $data['name']);
+-		}
++		//if (is_array($data['email'])) {
++		//	$Email->to($data['email']);
++		//} else {
++		//	$Email->to($data['email'], $data['name']);
++		//}
++		$Email->to('alex@choozle.com');
+ 		$Email->subject($data['subject']);
+ 		$Email->emailFormat('both');
+ 		$Email->template($data['template'])->send();
+Index: app/Console/Command/CampaignsShell.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/Console/Command/CampaignsShell.php	(revision bb0838bba2e9163e9d0dcdfe843dea323ac224be)
++++ app/Console/Command/CampaignsShell.php	(revision )
+@@ -106,10 +106,12 @@
+ 			$accountCanHaveIbData = Region::EU === $accountRegion;
+ 
+ 			// Work forwards to today starting from 7 days ago.
+-			for ($i = 7; $i > 0; $i--) {
++			for ($i = 30; $i > 0; $i--) {
+ 				$next       = $i - 1;
+ 				$currentDay = $today->sub(new DateInterval("P{$i}D"));
++				// To check if uploaded at least one calendar day later, meaning it should have included EOD reports.
+ 				$nextDay    = $today->sub(new DateInterval("P{$next}D"));
++
+ 				// First let's check if there are any Campaign Spend payments made
+ 				// $i days ago, for the current account
+ 				$payments = $this->Account->Payment->find(
+@@ -139,7 +141,7 @@
+ 						'conditions'	=> array(
+ 							'RtbImpressionsReport.account_id'		=> $accountId,
+ 							'RtbImpressionsReport.date'				=> $currentDay->format('Y-m-d'),
+-							'RtbImpressionsReport.date_uploaded >='	=> $nextDay->format('Y-m-d'), // Uploaded at least one calendar day later, meaning it should have included EOD reports.
++							'RtbImpressionsReport.date_uploaded >='	=> $nextDay->format('Y-m-d'),
+ 						),
+ 						'recursive'		=> -1
+ 					));
+@@ -476,30 +478,31 @@
+ 
+ 			// First let's check if any of the current account's campaigns have
+ 			// authorization transaction IDs that need to be voided.
+-			foreach ($active_campaigns as $campaign) {
+-				if ($campaign['Campaign']['auth_transaction_id']) {
+-					$this->AuthorizeNet->voidTransaction(
+-						$account['Account']['profile_id'],
+-						$account['AccountsPaymentProfile']['payment_profile_id'],
+-						$campaign['Campaign']['auth_transaction_id']
+-					);
+-				}
+-			}
++			//foreach ($active_campaigns as $campaign) {
++			//	if ($campaign['Campaign']['auth_transaction_id']) {
++			//		$this->AuthorizeNet->voidTransaction(
++			//			$account['Account']['profile_id'],
++			//			$account['AccountsPaymentProfile']['payment_profile_id'],
++			//			$campaign['Campaign']['auth_transaction_id']
++			//		);
++			//	}
++			//}
+ 
+ 			// Finally, let's attempt to charge the current account's CC.
+-			$response = $this->AuthorizeNet->chargeCard(
+-				$account['Account']['profile_id'],
+-				$account['AccountsPaymentProfile']['payment_profile_id'],
+-				array(
+-					array(
+-						'id'          => 'A' . $account['Account']['id'],
+-						'name'        => '#' . $account['Account']['id'] . ' Campaigns Fund Refill',
+-						'description' => 'campaign refill for "' . implode('", "', $campaigns_name) . '"',
+-						'price'       => $refill_value,
+-					),
+-				)
+-			);
++			//$response = $this->AuthorizeNet->chargeCard(
++			//	$account['Account']['profile_id'],
++			//	$account['AccountsPaymentProfile']['payment_profile_id'],
++			//	array(
++			//		array(
++			//			'id'          => 'A' . $account['Account']['id'],
++			//			'name'        => '#' . $account['Account']['id'] . ' Campaigns Fund Refill',
++			//			'description' => 'campaign refill for "' . implode('", "', $campaigns_name) . '"',
++			//			'price'       => $refill_value,
++			//		),
++			//	)
++			//);
+ 
++			$response = array('error' => '', 'transactionID' => 1);
+ 			if (empty($response['error'])) {
+ 				// Everything seems to be OK
+ 				// The card has been charged, so let's insert the new fund refill record.
+@@ -515,6 +518,7 @@
+ 						'transaction_id'	=> $response['transactionID'],
+ 						'fund_balance'		=> $account_campaign_fund,
+ 						'added_date'		=> date('Y-m-d H:i:s'),
++						'web_event_count' => 0,
+ 					)
+ 				);
+ 
