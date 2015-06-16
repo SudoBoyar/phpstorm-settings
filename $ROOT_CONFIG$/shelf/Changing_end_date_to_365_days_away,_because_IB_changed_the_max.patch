@@ -1,0 +1,57 @@
+Index: app/Console/Command/AudienceDistributionShell.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/Console/Command/AudienceDistributionShell.php	(revision 370f3d6d68851abf9e0e93f3fa62fa7c349abc6d)
++++ app/Console/Command/AudienceDistributionShell.php	(revision )
+@@ -73,22 +73,24 @@
+ 			$audience  = $this->getAudienceById($current->getAudienceId());
+ 			$account   = $this->getAccountById($audience['Audience']['account_id']);
+ 			$order     = $this->executeDistributionOrder($account, $audience, $current->getAudienceSet());
+-			if ($order) {
+-				// The order was successful. Save it locally.
++			if (!$order) {
++				// The order was not successful, continue and retry it next time
++				continue;
++			}
+-				
++
++			// The order was successful. Save it locally.
+-				$current->setName($order['audience_name']);
+-				$current->setOrderId($order['campaign_order_id']);
+-				$current->setSent(new DateTime());
+-				
+-				$endTimestamp = strtotime($order['campaign_end_dt']);
+-				$end = new DateTime();
+-				$end->setTimestamp($endTimestamp);
+-				$current->setEnd($end);
+-				
+-				$this->audienceDistributionOrder->save($current->toArray());
+-			}
+-		}
++			$current->setName($order['audience_name']);
++			$current->setOrderId($order['campaign_order_id']);
++			$current->setSent(new DateTime());
++
++			$endTimestamp = strtotime($order['campaign_end_dt']);
++			$end = new DateTime();
++			$end->setTimestamp($endTimestamp);
++			$current->setEnd($end);
++
++			$this->audienceDistributionOrder->save($current->toArray());
++		}
++	}
+-	}
+ 
+ 	/**
+ 	 * Handle all audiences whose distribution orders have completed
+@@ -260,7 +262,7 @@
+ 	}
+ 
+ 	/**
+-	 * @param int    $accountId
++	 * @param array  $account
+ 	 * @param string $audienceSet
+ 	 * @param array  $audience
+ 	 * @return bool|array

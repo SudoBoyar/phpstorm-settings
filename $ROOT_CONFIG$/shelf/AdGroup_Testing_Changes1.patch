@@ -1,0 +1,118 @@
+Index: app/Plugin/Campaigns/Controller/ChannelController.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/Plugin/Campaigns/Controller/ChannelController.php	(revision 6de775437860be6ef5bc85c2a7de66a8fed6a4b4)
++++ app/Plugin/Campaigns/Controller/ChannelController.php	(revision )
+@@ -410,15 +410,15 @@
+ 			if ($channel) {
+ 				// Let's try to get the current channel's saved location(s list)
+ 				$locationIDs = array();
+-				if (!is_null($channel['Channel']['adgroup'])) {
+-					$adgroup = json_decode($channel['Channel']['adgroup']);
+-					$GeoSegmentAdjustments = @$adgroup->adgroup->RTBAttributes->GeoSegmentAdjustments;
++				//if (!is_null($channel['Channel']['adgroup'])) {
++				//	$adgroup = json_decode($channel['Channel']['adgroup']);
++				//	$GeoSegmentAdjustments = @$adgroup->adgroup->RTBAttributes->GeoSegmentAdjustments;
++				//
++				//	foreach ($GeoSegmentAdjustments as $GeoSegmentAdjustment) {
++				//		$locationIDs[$GeoSegmentAdjustment->Id] = $GeoSegmentAdjustment->Adjustment;
++				//	}
++				//}
+-					
++				
+-					foreach ($GeoSegmentAdjustments as $GeoSegmentAdjustment) {
+-						$locationIDs[$GeoSegmentAdjustment->Id] = $GeoSegmentAdjustment->Adjustment;
+-					}
+-				}
+-				
+ 				$saved_locations = $this->getSavedLocations($locationIDs);
+ 				// Now let's separate the included geo locations, from the excluded ones
+ 				$this->set('saved_included_locations', $saved_locations['included']);
+@@ -476,15 +476,24 @@
+ 		}
+ 
+ 		// create a disabled rtb ad group
+-		$new_td_response = $this->TradeDesk->createAdgroup($data, @$td_id, null, false);
+-		if (empty($new_td_response['AdGroupId']) || isset($new_td_response['tdResponse']['Message'])) {
+-			return array(
+-				'message' => 'There was an error trying to save your adgroup.' . @$new_td_response['tdResponse']['Message'].'<br /> If you continue to receive this error, please visit our <a href="' . FRESHDESK_BASE_URL . '" target="_blank">Support Center</a>.'
+-			);
+-		}
++		//$new_td_response = $this->TradeDesk->createAdgroup($data, @$td_id, null, false);
++		//if (empty($new_td_response['AdGroupId']) || isset($new_td_response['tdResponse']['Message'])) {
++		//	return array(
++		//		'message' => 'There was an error trying to save your adgroup.' . @$new_td_response['tdResponse']['Message'].'<br /> If you continue to receive this error, please visit our <a href="' . FRESHDESK_BASE_URL . '" target="_blank">Support Center</a>.'
++		//	);
++		//}
++		//$adGroup = json_encode(
++		//	array(
++		//		'adgroup' => $new_td_response
++		//	)
++		//);
++
+ 		$adGroup = json_encode(
+ 			array(
+-				'adgroup' => $new_td_response
++				'adgroup' => array(
++					'isEnabled' => true,
++					'AdGroupId' => 1,
++				),
+ 			)
+ 		);
+ 
+@@ -564,7 +573,8 @@
+ 			
+ 			if ($channel) {
+ 				$adgroup = json_decode($channel['Channel']['adgroup']);
+-				$saved_site_lists = $adgroup->adgroup->RTBAttributes->SiteListIds;
++				//$saved_site_lists = $adgroup->adgroup->RTBAttributes->SiteListIds;
++				$saved_site_lists = array();
+ 			}
+ 		}
+ 		
+@@ -744,8 +754,10 @@
+ 				}
+ 
+ 				$this->TradeDeskAccount->id = $channel['Channel']['id'];
+-				$td_response = $this->TradeDesk->createAdgroup($ttd_conditions, $this->campaign['Campaign']['td_id'], null, ($channel['Channel']['status']=='E')); // create a disabled rtb ad group
+-
++				//$td_response = $this->TradeDesk->createAdgroup($ttd_conditions, $this->campaign['Campaign']['td_id'], null, ($channel['Channel']['status']=='E')); // create a disabled rtb ad group
++				$td_response = array(
++					'Message' => '',
++				);
+ 				if (empty($td_response['Message'])) {
+ 					// Alright, NOW let's update the local DB
+ 					$adGroup = json_encode(array(
+@@ -755,6 +767,8 @@
+ 					$save_data['Channel.adgroup'] = $escapedAdGroup;
+ 					$channel['Channel']['adgroup'] = $adGroup;
+ 
++					debug($event); die();
++
+ 					$this->Channel->updateAll($save_data, array(
+ 							'Channel.id' => $channel['Channel']['id']
+ 						));
+@@ -944,8 +958,10 @@
+ 		$this->TradeDeskAccount->id = $id;
+ 
+ 		if ($this->request->is('post') && @$this->request->data) { // now lets build the ad group
+-			$new_td_response = $this->TradeDesk->createAdgroup($this->request->data, $this->campaign['Campaign']['td_id'], $this->request->data['Channel']['creatives'], false); // create a disabled rtb ad group
+-
++			//$new_td_response = $this->TradeDesk->createAdgroup($this->request->data, $this->campaign['Campaign']['td_id'], $this->request->data['Channel']['creatives'], false); // create a disabled rtb ad group
++			$new_td_response = array(
++				'AdGroupId' => 1,
++			);
+ 			if (@$new_td_response['AdGroupId'] && !@$new_td_response['tdResponse']['Message']) { // if we have a successful response
+ 				// delete all prior channel/creative associations
+ 				$this->ChannelsCreatives->deleteAll(array(
+@@ -1675,7 +1691,7 @@
+ 	}
+ 
+ 
+-	public function pause($rtb_id, $type, $no_output = false) {
++	public function  pause($rtb_id, $type, $no_output = false) {
+ 		$this->autoRender = false; // just a logic function
+ 		
+ 		$channel = $this->Channel->find('first', array(

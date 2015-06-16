@@ -20,5 +20,6 @@
     <toolWindow group="PHP Debugger" />
     <toolWindow group="Web Deployment: File Transfer" />
     <toolWindow group="Debugger messages" />
+    <toolWindow group="Inspection Results" />
   </component>
 </application>

@@ -1,0 +1,29 @@
+Index: app/Lib/Choozle/AuthorizeNet/AuthorizeNet.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/Lib/Choozle/AuthorizeNet/AuthorizeNet.php	(date 1432138768000)
++++ app/Lib/Choozle/AuthorizeNet/AuthorizeNet.php	(revision )
+@@ -513,9 +513,16 @@
+ 	 */
+ 	private function getErrorMessageArray($response)
+ 	{
+-		$resultCode = !empty($response->xml->messages->resultCode) ? $response->xml->messages->resultCode : '';
+-		$code       = !empty($response->xml->messages->message->code) ? $response->xml->messages->message->code : '';
+-		$text       = !empty($response->xml->messages->message->text) ? $response->xml->messages->message->text : '';
++		if (empty($response->xml)) {
++			$message = 'Unknown error';
++		} else {
++			$xml = $response->xml;
++			$resultCode = !empty($xml->messages->resultCode) ? $xml->messages->resultCode : '';
++			$code       = !empty($xml->messages->message->code) ? $xml->messages->message->code : '';
++			$text       = !empty($xml->messages->message->text) ? $xml->messages->message->text : '';
++			$message = "{$resultCode} ({$code}) {$text}";
++		}
+ 
+-		return array('error' => "{$resultCode} ({$code}) {$text}");
+-	}}
++		return array('error' => $message);
++	}
++}
