@@ -31,11 +31,11 @@
   <component name="RecentDirectoryProjectsManager">
     <option name="recentPaths">
       <list>
+        <option value="Z:\zipline" />
         <option value="D:\xampp\htdocs\choozle\master" />
         <option value="D:\xampp\htdocs\choozle\zipline" />
         <option value="C:\Users\Steven\AppData\Local\Temp\config.inc.php0.tmp" />
         <option value="D:\xampp\htdocs\choozle\testSymfony2" />
-        <option value="Z:\zipline" />
         <option value="C:\xampp\htdocs\choozle\zipline" />
         <option value="Z:\zf2" />
         <option value="C:\Users\Alex\PhpstormProjects\Blank" />
@@ -49,10 +49,10 @@
     </option>
     <option name="openPaths">
       <list>
-        <option value="D:\xampp\htdocs\choozle\zipline" />
+        <option value="Z:\zipline" />
       </list>
     </option>
-    <option name="lastPath" value="D:\xampp\htdocs\choozle\master" />
+    <option name="lastPath" value="Z:\zipline" />
   </component>
   <component name="RecentTaskRepositories">
     <Trello shared="false">
@@ -97,6 +97,10 @@
       <option name="ERROR_STRIPE_COLOR" value="a74c0" />
       <option name="EFFECT_TYPE" value="0" />
     </pattern>
+  </component>
+  <component name="UsageViewSettings">
+    <option name="expanded" value="true" />
+    <option name="IS_EXPANDED" value="true" />
   </component>
   <component name="VcsApplicationSettings" PATCH_STORAGE_LOCATION="D:\xampp\htdocs\choozle\zipline\.idea\shelf">
     <option name="PATCH_STORAGE_LOCATION" value="D:\xampp\htdocs\choozle\zipline\.idea\shelf" />
