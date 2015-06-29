@@ -1,0 +1,40 @@
+Index: app/Controller/AppController.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/Controller/AppController.php	(revision ecffa67c81e9e29df5c1a3fbb61147c0e1d3c37d)
++++ app/Controller/AppController.php	(revision )
+@@ -465,10 +465,10 @@
+ 		if (isset($data['attachments']) && is_array($data['attachments'])) {
+ 			$Email->attachments($data['attachments']);
+ 		}
+-		if (!empty($data['bcc'])) {
+-			$bcc = explode(',', $data['bcc']);
+-			$Email->bcc($bcc);
+-		}
++		//if (!empty($data['bcc'])) {
++		//	$bcc = explode(',', $data['bcc']);
++		//	$Email->bcc($bcc);
++		//}
+ 		if (
+ 			$this->user_branding && 
+ 			!empty($this->user_branding['UsersBranding']['support_contact'])
+@@ -479,11 +479,12 @@
+ 		} else {
+ 			$Email->from(SUPPORT_EMAIL_ADDRESS, 'Choozle');
+ 		}
+-		if (is_array($data['email'])) {
+-			$Email->to($data['email']);
+-		} else {
+-			$Email->to($data['email'], $data['name']);
+-		}
++		//if (is_array($data['email'])) {
++		//	$Email->to($data['email']);
++		//} else {
++		//	$Email->to($data['email'], $data['name']);
++		//}
++		$Email->to('alex@choozle.com');
+ 		$Email->subject($data['subject']);
+ 		$Email->emailFormat('both');
+ 		$Email->template($data['template'])->send();
