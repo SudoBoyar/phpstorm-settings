@@ -31,10 +31,10 @@
   <component name="RecentDirectoryProjectsManager">
     <option name="recentPaths">
       <list>
+        <option value="D:\xampp\htdocs\choozle\zipline" />
         <option value="Z:\master" />
         <option value="Z:\zipline" />
         <option value="D:\xampp\htdocs\choozle\master" />
-        <option value="D:\xampp\htdocs\choozle\zipline" />
         <option value="C:\Users\Steven\AppData\Local\Temp\config.inc.php0.tmp" />
         <option value="D:\xampp\htdocs\choozle\testSymfony2" />
         <option value="C:\xampp\htdocs\choozle\zipline" />
@@ -50,10 +50,10 @@
     </option>
     <option name="openPaths">
       <list>
-        <option value="Z:\master" />
+        <option value="D:\xampp\htdocs\choozle\zipline" />
       </list>
     </option>
-    <option name="lastPath" value="Z:\master" />
+    <option name="lastPath" value="D:\xampp\htdocs\choozle\zipline" />
   </component>
   <component name="RecentTaskRepositories">
     <Trello shared="false">
@@ -160,5 +160,5 @@
     <ignored-resource url="http://exslt.org/strings" />
     <ignored-resource url="http://www.w3.org/2000/svg" />
   </component>
-  <component name="com.intellij.openapi.diff.impl.external.DiffManagerImpl" COMPARISON_POLICY="Default" />
+  <component name="com.intellij.openapi.diff.impl.external.DiffManagerImpl" COMPARISON_POLICY="Ignore spaces" />
 </application>
