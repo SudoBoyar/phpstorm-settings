@@ -1,0 +1,221 @@
+Index: app/Plugin/ChoozleInsights/View/Elements/AudienceProfileTooltip.ctp
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/Plugin/ChoozleInsights/View/Elements/AudienceProfileTooltip.ctp	(date 1428032987000)
++++ app/Plugin/ChoozleInsights/View/Elements/AudienceProfileTooltip.ctp	(revision )
+@@ -1,82 +1,27 @@
+ <div id="profile-drop" class="f-dropdown chart-popup" data-dropdown-content style="display:none;">
+ 	<?php if (@$is_admin) { ?>
+-		<div class="select2-include-segment left" style="width: 49%;">
+-			<select id="include-select">
+-				<option selected="selected" disabled="disabled">Include</option>
+-				<option><span class="icon-earth"></span> Reach <small>- 3.45M</small></option>
+-				<option>Visitors <small>- 1.23k</small></option>
+-				<option>Both Reach and Visitors</option>
+-			</select>
+-		</div>
+-		<div class="select2-exclude-segment right" style="width: 49%;">
+-			<select id="exclude-select">
+-				<option selected="selected" disabled="disabled">Exclude</option>
+-				<option><span class="icon-earth"></span> Exclude Reach <small>- 3.45M</small></option>
+-				<option>Exclude Visitors <small>- 1.23k</small></option>
+-				<option>Exclude Both Reach and Visitors</option>
+-			</select>
+-		</div>
+-		
+-		<?php /* THESE DROP DOWN BUTTONS DON'T WORK
+-		<a href="javascript:;" data-dropdown="includeDrop" class="button small success radius left dropdown">Include</a>
+-		<ul id="includeDrop" data-dropdown-content class="f-dropdown include-exclude-options">
+-			<li>
+-				<a href="javascript:;"
++		<a href="javascript:;"
+-				   id="add-as-include<?php echo $isIBehaviorInsights ? '-ib': '' ?>"
+-				   class="button small success radius left add-to-cart-button"><span class="icon-earth"></span> Include Reach <small>- 2.78M</small></a>
+-			</li>
+-			<?php //if ($isIBehaviorInsights) { ?>
+-				<li>
++		   id="add-as-include"
++		   class="button small success radius left add-to-cart-button">Include</a>
+-					<a href="javascript:;"
++		<a href="javascript:;"
++		   id="add-as-exclude"
++		   class="button small alert radius right add-to-cart-button">Exclude</a>
++		<?php if ($isIBehaviorInsights) { ?>
++			<a href="javascript:;"
+-					   id="add-visitors-as-include"
++			   id="add-visitors-as-include"
+-					   class="add-to-cart-button"><span class="icon-users2"></span> Include Visitors <small>- 1.18k</small></a>
+-				</li>
+-				<li>
++			   class="button small success radius left add-to-cart-button">Include Visitors</a>
+-					<a href="javascript:;"
++			<a href="javascript:;"
+-					   id="add-all-as-include"
+-					   class="add-to-cart-button"><span class="icon-users2"></span> Include Both Reach and Visitors</a>
+-				</li>
+-			<?php //} ?>
+-		</ul>
+-		<a href="javascript:;" data-dropdown="excludeDrop" class="button small alert radius right dropdown">Exclude</a>
+-		<ul id="excludeDrop" data-dropdown-content class="f-dropdown include-exclude-options">
+-			<li>
+-				<a href="javascript:;"
+-				   id="add-as-include<?php echo $isIBehaviorInsights ? '-ib': '' ?>"
+-				   class="add-to-cart-button"><span class="icon-earth"></span> Include Reach <small>- 2.78M</small></a>
+-			</li>
+-			<?php //if ($isIBehaviorInsights) { ?>
+-				<li>
+-					<a href="javascript:;"
+-					   id="add-as-exclude<?php echo $isIBehaviorInsights ? '-ib': '' ?>"
+-					   class="add-to-cart-button"><span class="icon-earth"></span> Exclude Reach <small>- 2.78M</small></a>
+-				</li>
+-				<?php //if ($isIBehaviorInsights) { ?>
+-					<li>
+-						<a href="javascript:;"
+-						   id="add-visitors-as-exclude"
++			   id="add-visitors-as-exclude"
+-						   class="add-to-cart-button"><span class="icon-users2"></span> Exclude Visitors <small>- 1.18k</small></a>
+-					</li>
+-					<li>
++			   class="button small alert radius right add-to-cart-button">Exclude Visitors</a>
++		<?php } ?>
+-						<a href="javascript:;"
++		<a href="javascript:;"
+-						   id="add-all-as-exclude"
+-						   class="add-to-cart-button"><span class="icon-users2"></span> Exclude Both Reach and Visitors</a>
+-					</li>
+-				<?php //} ?>
+-			<?php //} ?>
+-		</ul>
+-		*/ ?>
+-		<a href="javascript:;"
+ 		   id="add-audience"
+ 		   style="width:100%;display:none;"
+ 		   class="addToCart button small radius">Add to Audience Builder</a>
+ 	<?php } ?>
+ 	<h6></h6>
+-	<p><strong class="profileAudience">Matched Profiles:</strong><span class="profileVisitors"> None Available</span>
+-	</p>
++
+-	<p><strong class="profileAudience">Potential Reach:</strong><span class="profileAudience"> None Available</span>
++	<p><strong class="profileAudience">Potential Reach:</strong><span class="profileAudience">None Available</span>
+-	</p>
+-	<p><strong class="profileAudience">Index:</strong><span class="profileIndex"> None Available</span>
+ 	</p>
+ 	<?php
+ 	if ($this->params->params['controller'] != 'choozle_insights') {
+Index: app/Console/Command/GeoLocationsShell.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/Console/Command/GeoLocationsShell.php	(date 1428032987000)
++++ app/Console/Command/GeoLocationsShell.php	(revision )
+@@ -34,6 +34,7 @@
+ 			array(
+ 				'conditions' => array(
+ 					'Account.account_state' => 'A',
++					'Account.id IN' => array(1, 241),
+ 				),
+ 			)
+ 		);
+Index: app/Vendor/AuthorizeNet/lib/shared/AuthorizeNetRequest.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/Vendor/AuthorizeNet/lib/shared/AuthorizeNetRequest.php	(date 1428032987000)
++++ app/Vendor/AuthorizeNet/lib/shared/AuthorizeNetRequest.php	(revision )
+@@ -90,6 +90,10 @@
+         curl_setopt($curl_request, CURLOPT_TIMEOUT, 45);
+         curl_setopt($curl_request, CURLOPT_RETURNTRANSFER, 1);
+         curl_setopt($curl_request, CURLOPT_SSL_VERIFYHOST, 2);
++        curl_setopt($curl_request, CURLOPT_VERBOSE, true);
++	    //debug(ROOT . '\app\tmp\logs\curl.log'); die();
++	    $fh = fopen(ROOT . '\app\tmp\logs\curl.log', 'w+');
++        curl_setopt($curl_request, CURLOPT_STDERR, $fh);
+         if ($this->VERIFY_PEER) {
+             curl_setopt($curl_request, CURLOPT_CAINFO, dirname(dirname(__FILE__)) . '/ssl/cert.pem');
+         } else {
+@@ -117,4 +121,4 @@
+         return $this->_handleResponse($response);
+     }
+ 
+-}
+\ No newline at end of file
++}
+Index: app/Plugin/ChoozleInsights/Controller/ChoozleInsightsController.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/Plugin/ChoozleInsights/Controller/ChoozleInsightsController.php	(date 1428032987000)
++++ app/Plugin/ChoozleInsights/Controller/ChoozleInsightsController.php	(revision )
+@@ -267,7 +267,31 @@
+ 	 */
+ 	public function index($chart_name = null, $metric = null)
+ 	{
+-		//debug($this->_get_favorited_charts()); die();
++		//App::uses('TradeDesk', 'Model/Datasource');
++		///** @var \TradeDesk $tda */
++		//$tda = ClassRegistry::init('TradeDesk');
++		//$response = $tda->post(
++		//	array(
++		//		'request' => 'dmp/firstparty/data',
++		//		'conditions' => array(
++		//			'AdvertiserId' => 'v6ckv7e',
++		//			'PageStartIndex' => 500,
++		//			'PageSize' => 100,
++		//		)
++		//	)
++		//);
++		//debug($response); die();
++		//App::uses('TradeDeskAccount', 'Model');
++		///** @var \TradeDeskAccount $tda */
++		//$tda = ClassRegistry::init('TradeDeskAccount');
++		//$response = $tda->find(
++		//	'all',
++		//	array(
++		//		'request' => 'dmp/firstparty/data'
++		//	)
++		//);
++		//debug($response); die();
++		//debug($this->getCurrentAccountCart()); die();
+ 		if ($this->current_account['Subscription']['subscription_type'] == 'RTB') {
+ 			// No insights access
+ 			$this->render('index');
+Index: app/Controller/AppController.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/Controller/AppController.php	(date 1428032987000)
++++ app/Controller/AppController.php	(revision )
+@@ -467,16 +467,17 @@
+ 		if (isset($data['attachments']) && is_array($data['attachments'])) {
+ 			$Email->attachments($data['attachments']);
+ 		}
+-		if (!empty($data['bcc'])) {
+-			$bcc = explode(',', $data['bcc']);
+-			$Email->bcc($bcc);
+-		}
++		//if (!empty($data['bcc'])) {
++		//	$bcc = explode(',', $data['bcc']);
++		//	$Email->bcc($bcc);
++		//}
+ 		$Email->from(SUPPORT_EMAIL_ADDRESS, 'Choozle');
+-		if (is_array($data['email'])) {
+-			$Email->to($data['email']);
+-		} else {
+-			$Email->to($data['email'], $data['name']);
+-		}
++		//if (is_array($data['email'])) {
++		//	$Email->to($data['email']);
++		//} else {
++		//	$Email->to($data['email'], $data['name']);
++		//}
++		$Email->to('alex@choozle.com');
+ 		$Email->subject($data['subject']);
+ 		$Email->emailFormat('both');
+ 		$Email->template($data['template'])->send();

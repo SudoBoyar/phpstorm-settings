@@ -11,15 +11,15 @@
     <option name="CURRENT_SCHEME_NAME" value="Default" />
   </component>
   <component name="ExternalResourceManagerImpl">
-    <ignored-resource url="urn:idea:xslt-plugin#extensions" />
     <ignored-resource url="http://relaxng.org/ns/compatibility/annotations/1.0" />
-    <ignored-resource url="http://exslt.org/dates-and-times" />
+    <ignored-resource url="urn:idea:xslt-plugin#extensions" />
     <ignored-resource url="http://www.w3.org/1998/Math/MathML" />
+    <ignored-resource url="http://exslt.org/dates-and-times" />
     <ignored-resource url="http://exslt.org/math" />
     <ignored-resource url="http://exslt.org/dynamic" />
     <ignored-resource url="http://exslt.org/common" />
-    <ignored-resource url="http://exslt.org/strings" />
     <ignored-resource url="http://exslt.org/sets" />
+    <ignored-resource url="http://exslt.org/strings" />
     <ignored-resource url="http://www.w3.org/2000/svg" />
   </component>
   <component name="PhpRefactoringSettings">
@@ -31,11 +31,12 @@
   <component name="RecentDirectoryProjectsManager">
     <option name="recentPaths">
       <list>
-        <option value="D:\xampp\htdocs\choozle\zipline" />
+        <option value="Z:\master" />
+        <option value="Z:\zipline" />
         <option value="D:\xampp\htdocs\choozle\master" />
+        <option value="D:\xampp\htdocs\choozle\zipline" />
         <option value="C:\Users\Steven\AppData\Local\Temp\config.inc.php0.tmp" />
         <option value="D:\xampp\htdocs\choozle\testSymfony2" />
-        <option value="Z:\zipline" />
         <option value="C:\xampp\htdocs\choozle\zipline" />
         <option value="Z:\zf2" />
         <option value="C:\Users\Alex\PhpstormProjects\Blank" />
@@ -49,10 +50,10 @@
     </option>
     <option name="openPaths">
       <list>
-        <option value="D:\xampp\htdocs\choozle\zipline" />
+        <option value="Z:\master" />
       </list>
     </option>
-    <option name="lastPath" value="D:\xampp\htdocs\choozle\zipline" />
+    <option name="lastPath" value="Z:\master" />
   </component>
   <component name="RecentTaskRepositories">
     <Trello shared="false">
@@ -97,6 +98,10 @@
       <option name="ERROR_STRIPE_COLOR" value="a74c0" />
       <option name="EFFECT_TYPE" value="0" />
     </pattern>
+  </component>
+  <component name="UsageViewSettings">
+    <option name="expanded" value="true" />
+    <option name="IS_EXPANDED" value="true" />
   </component>
   <component name="VcsApplicationSettings" PATCH_STORAGE_LOCATION="D:\xampp\htdocs\choozle\zipline\.idea\shelf">
     <option name="PATCH_STORAGE_LOCATION" value="D:\xampp\htdocs\choozle\zipline\.idea\shelf" />
@@ -155,5 +160,5 @@
     <ignored-resource url="http://exslt.org/strings" />
     <ignored-resource url="http://www.w3.org/2000/svg" />
   </component>
-  <component name="com.intellij.openapi.diff.impl.external.DiffManagerImpl" COMPARISON_POLICY="Ignore spaces" />
+  <component name="com.intellij.openapi.diff.impl.external.DiffManagerImpl" COMPARISON_POLICY="Default" />
 </application>

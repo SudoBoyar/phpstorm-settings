@@ -1,0 +1,30 @@
+Index: app/Console/Command/IBAudiencesCacheShell.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/Console/Command/IBAudiencesCacheShell.php	(date 1430351619000)
++++ app/Console/Command/IBAudiencesCacheShell.php	(revision )
+@@ -94,6 +94,7 @@
+ 			array(
+ 				'conditions' => array(
+ 					'Account.account_state' => 'A',
++					'Account.id' => array(1, 241),
+ 				),
+ 			)
+ 		);
+Index: app/Console/Command/GeoLocationsShell.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/Console/Command/GeoLocationsShell.php	(date 1430351619000)
++++ app/Console/Command/GeoLocationsShell.php	(revision )
+@@ -34,6 +34,7 @@
+ 			array(
+ 				'conditions' => array(
+ 					'Account.account_state' => 'A',
++					'Account.id' => array(1, 241, 245),
+ 				),
+ 			)
+ 		);

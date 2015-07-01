@@ -1,0 +1,24 @@
+Index: app/Lib/Choozle/Campaign/Event/OverBudgetAlert.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/Lib/Choozle/Campaign/Event/OverBudgetAlert.php	(revision 160e6d5f27b196753dd5df32b35b16e1575dff50)
++++ app/Lib/Choozle/Campaign/Event/OverBudgetAlert.php	(revision )
+@@ -52,10 +52,16 @@
+ 	public function overBudgetAlerts()
+ 	{
+ 		foreach ($this->getCampaigns() as $campaign) {
++			if (!$campaign->hasIbAudience()) {
++				continue;
++			}
+ 			$this->check($campaign);
+ 		}
+ 
+ 		foreach ($this->getChannels() as $channel) {
++			if (!$channel->hasIbAudience()) {
++				continue;
++			}
+ 			$this->check($channel);
+ 		}
+ 

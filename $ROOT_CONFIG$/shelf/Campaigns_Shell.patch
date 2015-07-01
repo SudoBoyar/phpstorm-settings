@@ -1,0 +1,25 @@
+Index: app/Console/Command/CampaignsShell.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/Console/Command/CampaignsShell.php	(revision 39acb125495a9c8ea3aa4bac5580b32877f01e05)
++++ app/Console/Command/CampaignsShell.php	(revision )
+@@ -187,7 +187,7 @@
+ 								'recursive' => -1,
+ 							)
+ 						);
+-						if (null === $audienceProfiles) {
++						if (empty($audienceProfiles)) {
+ 							// No audience profiles
+ 							continue;
+ 						}
+@@ -216,7 +216,7 @@
+ 								}
+ 							}
+ 							$profile = new \Choozle\Audience\CartAudience(
+-								json_decode($audienceProfile['AudiencesProfile']['value'])
++								json_decode($audienceProfile['AudiencesProfile']['value'], true)
+ 							);
+ 							$box->addAudience($profile);
+ 							$hasIbAudience = $hasIbAudience || !$profile->isFirstParty();
