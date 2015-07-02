@@ -1,7 +1,7 @@
 <application>
   <component name="FindSettings">
-    <option name="customScope" value="Directory 'D:\xampp\htdocs\choozle\osvaldo2\app\Plugin\Libraries\Controller'" />
-    <option name="defaultScopeName" value="Directory 'D:\xampp\htdocs\choozle\osvaldo2\app\Plugin\Libraries\Controller'" />
+    <option name="customScope" value="Directory 'D:\xampp\htdocs\choozle\osvaldo2\app\Console\Command'" />
+    <option name="defaultScopeName" value="Directory 'D:\xampp\htdocs\choozle\osvaldo2\app\Console\Command'" />
     <option name="localCaseSensitive" value="true" />
     <option name="localWholeWordsOnly" value="true" />
     <option name="showResultsInSeparateView" value="true" />
@@ -10,7 +10,7 @@
     <option name="WHOLE_WORDS_ONLY" value="true" />
     <option name="LOCAL_WHOLE_WORDS_ONLY" value="true" />
     <option name="SHOW_RESULTS_IN_SEPARATE_VIEW" value="true" />
-    <option name="SEARCH_SCOPE" value="Directory 'D:\xampp\htdocs\choozle\osvaldo2\app\Plugin\Libraries\Controller'" />
+    <option name="SEARCH_SCOPE" value="Directory 'D:\xampp\htdocs\choozle\osvaldo2\app\Console\Command'" />
     <option name="FILE_MASK" value="*.php,*.ctp" />
     <recentFileMasks>
       <mask>*.properties</mask>
