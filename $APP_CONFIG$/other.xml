@@ -10,14 +10,6 @@
   <component name="CodeStyleSchemes">
     <option name="CURRENT_SCHEME_NAME" value="Default" />
   </component>
-  <component name="DuplocatorSettings">
-    <option name="SELECTED_PROFILES">
-      <set>
-        <option value="PHP" />
-      </set>
-    </option>
-    <option name="LAST_SELECTED_LANGUAGE" value="PHP" />
-  </component>
   <component name="ExternalResourceManagerImpl">
     <ignored-resource url="http://relaxng.org/ns/compatibility/annotations/1.0" />
     <ignored-resource url="urn:idea:xslt-plugin#extensions" />
@@ -39,11 +31,10 @@
   <component name="RecentDirectoryProjectsManager">
     <option name="recentPaths">
       <list>
-        <option value="D:\xampp\htdocs\choozle\zipline" />
-        <option value="D:\xampp\htdocs\choozle\osvaldo2" />
-        <option value="Z:\master" />
         <option value="Z:\zipline" />
+        <option value="Z:\master" />
         <option value="D:\xampp\htdocs\choozle\master" />
+        <option value="D:\xampp\htdocs\choozle\zipline" />
         <option value="C:\Users\Steven\AppData\Local\Temp\config.inc.php0.tmp" />
         <option value="D:\xampp\htdocs\choozle\testSymfony2" />
         <option value="C:\xampp\htdocs\choozle\zipline" />
@@ -59,10 +50,10 @@
     </option>
     <option name="openPaths">
       <list>
-        <option value="D:\xampp\htdocs\choozle\zipline" />
+        <option value="Z:\zipline" />
       </list>
     </option>
-    <option name="lastPath" value="D:\xampp\htdocs\choozle\zipline" />
+    <option name="lastPath" value="Z:\zipline" />
   </component>
   <component name="RecentTaskRepositories">
     <Trello shared="false">
@@ -169,5 +160,5 @@
     <ignored-resource url="http://exslt.org/strings" />
     <ignored-resource url="http://www.w3.org/2000/svg" />
   </component>
-  <component name="com.intellij.openapi.diff.impl.external.DiffManagerImpl" COMPARISON_POLICY="Ignore spaces" />
+  <component name="com.intellij.openapi.diff.impl.external.DiffManagerImpl" COMPARISON_POLICY="Default" />
 </application>
